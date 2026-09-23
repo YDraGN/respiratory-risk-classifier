@@ -219,6 +219,6 @@ __marimo__/
 
 # Project-specific: data & model artifacts
 data/checkpoints/*.parquet
-data/**/*.parquet          # bắt luôn screening_checkpoint.parquet và các parquet phát sinh sau này ở bất kỳ cấp nào trong data/
-data/screening_log.txt     # log chạy local, không cần lưu lịch sử
+data/**/*.parquet          
+data/screening_log.txt     
 model/checkpoints/
