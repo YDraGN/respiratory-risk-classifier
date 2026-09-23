@@ -216,5 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-specific: data & model artifacts
 data/checkpoints/*.parquet
+data/**/*.parquet          
+data/screening_log.txt     
 model/checkpoints/
