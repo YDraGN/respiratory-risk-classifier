@@ -40,6 +40,7 @@ Kết quả trên tập test (dữ liệu MIMIC, bệnh nhân ICU): ở T = 88%,
 | `examples/esp32c3/` | project ESP-IDF mẫu: TFLite Micro, tự kiểm tra lúc boot, vòng lặp mỗi phút | có, đây là điểm bắt đầu |
 | `docs/HUONG_DAN_CAI_DAT.md` | hướng dẫn cài đặt trên MAX30102 + ESP32-C3 SuperMini | |
 | `docs/SPEC.md` | đặc tả: dữ liệu vào, công thức, ngưỡng, logic cảnh báo, config | |
+| `docs/CONFIG_VA_API.md` | nhận ngưỡng bác sĩ đặt, áp dụng vào engine, danh tính thiết bị, API gửi dữ liệu (BLE/WiFi), mẫu prompt nhờ AI | |
 
 File sinh tự động được tạo bởi `model/export_firmware.py` từ `model/models_v3/`. Khi có model mới thì chạy lại script này, **không sửa tay**.
 
@@ -90,14 +91,16 @@ cd examples/esp32c3 && idf.py set-target esp32c3 && idf.py build flash monitor
 
 **Bước 4. Viết `sensor_read_minute()`** trong `main.cc`, gộp dữ liệu giây thành phút theo bảng ở mục 3.
 
-**Bước 5. Nhận config từ server** (topic `dev/{id}/config`, xem mục 6 trong [docs/SPEC.md](docs/SPEC.md)).
-- Khi `T` đổi, gọi `spo2tc_engine_set_T(&engine, T)`. Hàm trả `-1` nếu T nằm ngoài 85–95; khi đó giữ cấu hình cũ và báo lỗi về server.
-- Gửi lại `version` của config để server biết thiết bị đã áp dụng.
+**Bước 5. Nhận config từ server** (chi tiết: [docs/CONFIG_VA_API.md](docs/CONFIG_VA_API.md), §2–5).
+- Config đến qua BLE CONFIG (app ghi), HTTPS `GET /api/app/v1/device/config`, hoặc MQTT `dev/{device_id}/config` (tùy chọn).
+- Kiểm tra → lưu NVS → áp dụng ở đầu phút trong task chạy engine. Chỉ gọi `spo2tc_engine_set_T` khi **T đổi**; đổi tầng/critical thì gán thẳng `engine.cfg`.
+- `model_version` hoặc ngưỡng INT8 gửi kèm không khớp firmware: vẫn áp dụng T cho luật, tắt ML, ack `applied_rules_only`.
+- Báo lại `config_version` (STATUS qua BLE, hoặc `POST /api/app/v1/ingest/config-ack` qua WiFi).
 
-**Bước 6. Gửi dữ liệu lên server:**
-- bản ghi phút (4 kênh) và `level`;
-- thông báo khi `notify_watch`, `notify_alert` hoặc `notify_critical` bằng 1 (đã qua persistence và cooldown);
-- `prob`, `baseline`, `base_hours` để hiển thị trên dashboard.
+**Bước 6. Gửi dữ liệu lên server** (chi tiết: [docs/CONFIG_VA_API.md](docs/CONFIG_VA_API.md), §6–7).
+- Chế độ BLE: notify RECORDS / ASSESSMENT / STATUS cho app (đặc tả byte: `docs/ble-gatt.md` ở repo app).
+- Chế độ WiFi: HTTPS `POST /api/app/v1/ingest/{telemetry,assessments,status}` với header `x-device-id`, `x-device-key`; xóa flash theo `acked_seq`.
+- Thông báo `notify_alert` / `notify_critical` gửi **ngay**; kèm `prob`, `baseline`, `base_hours`, `config_version`, `model_version`.
 
 ## 5. Tài nguyên ước tính
 
