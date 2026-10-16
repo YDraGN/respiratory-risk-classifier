@@ -223,7 +223,7 @@ if (r.notify_alert)    { /* gửi ALERT (r.alert_by_rule: do luật hay do ML) *
 if (r.notify_watch)    { /* gửi WATCH */ }
 ```
 
-**Đổi T khi bác sĩ cập nhật config** (xem mục 6 trong SPEC và trình tự đầy đủ ở [CONFIG_VA_API.md](CONFIG_VA_API.md) §4):
+**Đổi T khi bác sĩ cập nhật config** (xem mục 6 trong SPEC):
 
 ```c
 if (spo2tc_engine_set_T(&engine, new_T) != 0) { /* T ngoài 85..95: từ chối, báo lỗi về server */ }
@@ -253,7 +253,7 @@ Gợi ý tiết kiệm pin 300 mAh:
 | 5 | Tháo vòng 15 phút | trạng thái `UNKNOWN`, không có ALERT/CRITICAL giả |
 | 6 | Bản firmware thử nghiệm bơm phút giả `spo2_mean = 82` trong 3 phút | `CRITICAL` phát đúng ở phút thứ 3, không phát lại trong 30 phút |
 | 7 | Đeo liên tục 24 giờ cho người khỏe | báo giả/ngày ở T = 92 nằm trong khoảng ngân sách (khoảng 1/ngày cho Alert) |
-| 8 | Đổi T qua config: 85 và 95 được nhận; 84 và 97 bị từ chối (đủ bộ kiểm thử C1–C11 ở [CONFIG_VA_API.md](CONFIG_VA_API.md) §8) | |
+| 8 | Đổi T qua config: 85 và 95 được nhận; 84 và 97 bị từ chối | |
 
 ## 9. Xử lý sự cố
 
@@ -273,4 +273,4 @@ Gợi ý tiết kiệm pin 300 mAh:
 2. Chạy lại `cd model && python export_firmware.py`.
 3. Chạy `test_host` trên PC (xem [../README.md](../README.md), mục 4).
 4. Build, nạp, kiểm tra `self-test 24/24` và `model_version` mới trong log.
-5. Server gửi config với `model_version` mới. Thiết bị nhận config có `model_version` khác bản đang chạy thì chỉ áp dụng T cho luật, tắt ML và ack `applied_rules_only`.
+5. Server gửi config với `model_version` mới. Thiết bị từ chối config có `model_version` khác bản đang chạy.

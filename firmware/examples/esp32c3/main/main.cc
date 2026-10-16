@@ -44,8 +44,7 @@ static void publish_minute(const float m[SPO2TC_N_CH], const spo2tc_result_t *r)
 static void publish_notification(const char *tier, const spo2tc_result_t *r) {
   ESP_LOGW(TAG, "THÔNG BÁO %s | p=%.3f q=%d", tier, r->prob, r->out_q);
 }
-// Config bác sĩ đặt (BLE CONFIG / HTTPS / MQTT): kiểm tra, lưu NVS, áp dụng ở đầu vòng lặp phút bên dưới.
-// Chỉ gọi spo2tc_engine_set_T khi T đổi. Trình tự đầy đủ: docs/CONFIG_VA_API.md §4.
+// Khi nhận config mới từ server (dev/{id}/config): kiểm tra version, gọi spo2tc_engine_set_T, cập nhật cfg tầng.
 
 static const char *LEVEL[] = {"UNKNOWN", "NORMAL", "WATCH", "ALERT", "CRITICAL"};
 

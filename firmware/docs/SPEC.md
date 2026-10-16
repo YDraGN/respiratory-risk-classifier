@@ -158,14 +158,26 @@ Tầng ML chỉ phủ các sự kiện đến sau một đoạn đầu vào sạ
 
 ## 6. Config từ server
 
-Định dạng đầy đủ (JSON `config.v1`, gói BLE 16 B), kiểm tra hợp lệ, trình tự áp dụng và API: xem [CONFIG_VA_API.md](CONFIG_VA_API.md). Tóm tắt các quy tắc gắn với model:
+Topic `dev/{id}/config`, JSON:
 
-- Ngưỡng int8 lấy từ `SPO2TC_*_THR_Q[T − 85]` trong firmware. Server gửi kèm `thr_q` và `model_version` **chỉ để đối chiếu**.
-- `model_version` khác `SPO2TC_MODEL_VERSION` hoặc `thr_q` lệch bảng: vẫn áp dụng `T` và phần luật (ALERT theo luật, CRITICAL), **tắt ML** (gọi engine với `model = NULL`), ack `applied_rules_only`. Giữ T của bác sĩ để luật vẫn bảo vệ bệnh nhân.
-- `T` ngoài 85–95: từ chối cả config (web cũng phải chặn).
-- Chỉ gọi `spo2tc_engine_set_T` khi T đổi. Đổi cooldown, k/n, ngưỡng Critical, nhịp tim thì gán thẳng vào `engine.cfg` để không xóa lịch sử persistence.
-- Không cấu hình được: sự kiện luật = 3 phút (`SPO2TC_MIN_EVENT`), cửa sổ 60 phút, chạy model mỗi 5 phút.
-- Muốn hiệu chỉnh bảng ngưỡng theo phản hồi thực tế: export lại header, OTA firmware, kèm `model_version` mới.
+```json
+{
+  "version": 12,
+  "model_version": "hybrid_tc-20261016-s3",
+  "T": 90,
+  "tiers": {
+    "watch": { "k": 1, "n": 1, "cooldown": 30 },
+    "alert": { "k": 1, "n": 1, "cooldown": 60 }
+  },
+  "critical": { "crit_T": 85, "n_min": 3, "sqi_min": 0.5, "hr_low": 40, "hr_high": 140, "cooldown": 30 }
+}
+```
+
+Quy tắc xử lý:
+- `model_version` khác `SPO2TC_MODEL_VERSION`: **từ chối** cả config, vì bảng ngưỡng gắn với model.
+- `T` ngoài 85–95: từ chối (web cũng phải chặn).
+- Ngưỡng int8 lấy từ `SPO2TC_*_THR_Q[T − 85]` trong firmware, không gửi qua mạng. Muốn hiệu chỉnh ngưỡng theo phản hồi thực tế (đổi bảng), dùng cơ chế OTA của header, kèm `model_version` mới.
+- Áp dụng xong thì trả về `{"ack_version": 12}`.
 
 ## 7. Kiểm chứng
 
