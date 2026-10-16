@@ -39,7 +39,9 @@ model/
   10_lightgbm_tc.ipynb   đối chứng: LightGBM có ràng buộc đơn điệu, luật, độ quan trọng đặc trưng
   11_hybrid_tc.ipynb     model chính: hybrid Conv1D + Dense nhận T, đánh giá G1–G10, export INT8
   models_v3/             model xuất cho thiết bị (.tflite, _norm.npz, _meta.json)
+  export_firmware.py     sinh gói firmware/ từ models_v3 (C array, header, vector kiểm thử)
   runs/                  checkpoint và điểm số từng lần train (không commit)
+firmware/                gói bàn giao cho team phần cứng: thư viện C, model INT8, ví dụ ESP32-C3 (xem firmware/README.md)
 archive/v2_thr88/        bản cũ ngưỡng cố định 88% (notebook, model, kết quả đã báo cáo)
 ```
 
@@ -56,6 +58,7 @@ Chạy notebook theo số thứ tự. Mỗi notebook chạy trong chính thư m�
 2. `data/03_windowing.ipynb`, rồi `data/04_splitting.ipynb`, tạo ra `data/data/dataset_tc/`.
 3. `model/10_lightgbm_tc.ipynb`: lưu điểm của LightGBM để notebook sau so sánh.
 4. `model/11_hybrid_tc.ipynb`: train 3 seed, chọn ngưỡng trên val, **mở test một lần**, export vào `model/models_v3/`.
+5. `cd model && python export_firmware.py`: sinh lại gói `firmware/` mỗi khi model đổi, rồi chạy kiểm thử C (xem `firmware/README.md`).
 
 ## Quy ước đánh giá
 

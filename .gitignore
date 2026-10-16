@@ -226,3 +226,11 @@ data/screening_log.txt
 # checkpoint, điểm số, thống kê chuẩn hóa của từng lần train
 model/runs/
 archive/*/runs/
+# build của gói firmware
+firmware/test_host
+firmware/test_host.exe
+firmware/examples/*/build/
+firmware/examples/*/managed_components/
+firmware/examples/*/sdkconfig
+firmware/examples/*/sdkconfig.old
+firmware/examples/*/dependencies.lock

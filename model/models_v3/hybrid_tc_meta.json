@@ -1,0 +1,207 @@
+{
+ "model_version": "hybrid_tc-20261016-s3",
+ "deploy_seed": 3,
+ "tflite_kb": 19.7,
+ "params": 8017,
+ "input_order": [
+  "serving_default_tab:0",
+  "serving_default_seq:0"
+ ],
+ "input_seq": {
+  "shape": [
+   60,
+   6
+  ],
+  "channels": [
+   "spo2_mean-T",
+   "spo2_min-T",
+   "spo2_valid",
+   "pulse_mean",
+   "mask_spo2_mean",
+   "mask_pulse_mean"
+  ],
+  "scale": 0.06787651777267456,
+  "zero_point": 39
+ },
+ "input_tab": {
+  "shape": [
+   23
+  ],
+  "features": [
+   "sp_mean_rT",
+   "sp_p10_rT",
+   "mn_min60_rT",
+   "mn_min10_rT",
+   "sp_last5_rT",
+   "frac_lt_T",
+   "frac_lt_T2",
+   "frac_lt_T4",
+   "sp_slope60",
+   "sp_slope30",
+   "sp_d_last10_first30",
+   "sp_std60",
+   "sp_std15",
+   "pu_mean",
+   "pu_slope30",
+   "pu_d_last10_first30",
+   "pu_std60",
+   "base_rT",
+   "last5_rbase",
+   "base_hours",
+   "valid_mean",
+   "sp_nan_frac",
+   "T"
+  ],
+  "scale": 0.03921568766236305,
+  "zero_point": -1
+ },
+ "output": {
+  "scale": 0.04338926449418068,
+  "zero_point": 125,
+  "kind": "logit"
+ },
+ "T_valid_range": [
+  85,
+  95
+ ],
+ "T_train": [
+  86,
+  87,
+  88,
+  90,
+  92,
+  93,
+  94
+ ],
+ "T_holdout": [
+  89,
+  91
+ ],
+ "thresholds": {
+  "T": [
+   85,
+   86,
+   87,
+   88,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94,
+   95
+  ],
+  "watch_prob": [
+   0.043913,
+   0.043913,
+   0.063558,
+   0.091154,
+   0.121937,
+   0.161272,
+   0.206678,
+   0.260891,
+   0.304831,
+   0.352641,
+   0.352641
+  ],
+  "alert_prob": [
+   0.091154,
+   0.091154,
+   0.119633,
+   0.155489,
+   0.203144,
+   0.260891,
+   0.300254,
+   0.3428,
+   0.393197,
+   0.414082,
+   0.414082
+  ],
+  "watch_logit": [
+   -3.0806,
+   -3.0806,
+   -2.6901,
+   -2.2996,
+   -1.9742,
+   -1.6488,
+   -1.3451,
+   -1.0413,
+   -0.8244,
+   -0.6074,
+   -0.6074
+  ],
+  "alert_logit": [
+   -2.2996,
+   -2.2996,
+   -1.9959,
+   -1.6922,
+   -1.3668,
+   -1.0413,
+   -0.8461,
+   -0.6508,
+   -0.4339,
+   -0.3471,
+   -0.3471
+  ],
+  "watch_int8": [
+   54,
+   54,
+   63,
+   71,
+   79,
+   87,
+   94,
+   101,
+   106,
+   110,
+   110
+  ],
+  "alert_int8": [
+   71,
+   71,
+   79,
+   86,
+   93,
+   101,
+   105,
+   109,
+   114,
+   117,
+   117
+  ],
+  "selected_on": "val INT8, báo giả/ngày thật sau persistence+cooldown",
+  "smoothing": "isotonic"
+ },
+ "tiers": {
+  "watch": {
+   "fa_day": 3.0,
+   "k": 1,
+   "n": 1,
+   "cooldown": 30
+  },
+  "alert": {
+   "fa_day": 1.0,
+   "k": 1,
+   "n": 1,
+   "cooldown": 60
+  }
+ },
+ "critical": {
+  "crit_T": 85,
+  "n_min": 3,
+  "sqi_min": 0.5,
+  "hr_low": 40,
+  "hr_high": 140,
+  "cooldown": 30
+ },
+ "baseline": {
+  "definition": "trung vị spo2_mean các phút SQI tốt trong 24-72 giờ gần nhất (firmware); train dùng 6-24 giờ trước cửa sổ",
+  "min_hours": 1.0,
+  "fallback": "SpO2 trung bình của cửa sổ hiện tại, base_hours=0",
+  "freeze_during_alert": true,
+  "clinician_reference": true
+ },
+ "unknown_state": {
+  "rule": "spo2_valid trung bình 10 phút cuối < 0.5 hoặc thiếu > 30% phút đầu vào -> UNKNOWN, không chạy model"
+ }
+}
