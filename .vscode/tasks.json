@@ -1,0 +1,75 @@
+{
+    // Chạy notebook bằng .venv và ghi output thẳng vào file .ipynb (tools/run_notebook.py).
+    // Mở notebook trong editor rồi chạy task: Ctrl+Shift+P → "Tasks: Run Task".
+    // Đừng sửa notebook trong lúc task chạy, VS Code sẽ hỏi ghi đè.
+    "version": "2.0.0",
+    "options": {
+        "env": { "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1" }
+    },
+    "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+    "tasks": [
+        {
+            "label": "Notebook: chạy file đang mở",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "${file}"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Data 01: tải numerics (rất lâu, có resume)",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "data/01_download.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Data 02: chuẩn hóa lưới 1 phút",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "data/02_standardise.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Data 03: gắn nhãn và cắt cửa sổ",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "data/03_windowing.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Data 04: chia train/val/test",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "data/04_splitting.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Model 10: LightGBM threshold-conditioned",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "model/10_lightgbm_tc.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Model 11: hybrid threshold-conditioned",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "model/11_hybrid_tc.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Pipeline: data 02 → 04",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "data/02_standardise.ipynb", "data/03_windowing.ipynb", "data/04_splitting.ipynb"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Pipeline: train 10 → 11",
+            "type": "process",
+            "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+            "args": ["tools/run_notebook.py", "model/10_lightgbm_tc.ipynb", "model/11_hybrid_tc.ipynb"],
+            "problemMatcher": []
+        }
+    ]
+}

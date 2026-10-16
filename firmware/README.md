@@ -8,7 +8,8 @@ Gói này chứa mọi thứ để chạy model cảnh báo sớm hạ SpO₂ tr
 - vector kiểm thử mẫu;
 - project mẫu ESP-IDF.
 
-Đặc tả chi tiết từng công thức nằm ở [docs/SPEC.md](docs/SPEC.md).
+- **Bắt đầu từ đây:** [docs/HUONG_DAN_CAI_DAT.md](docs/HUONG_DAN_CAI_DAT.md) hướng dẫn từng bước cho MAX30102 + ESP32-C3 SuperMini: nối dây, cài ESP-IDF, build/nạp, driver cảm biến, gộp phút, kiểm tra trên thiết bị.
+- Đặc tả chi tiết từng công thức nằm ở [docs/SPEC.md](docs/SPEC.md).
 
 ## 1. Model làm gì
 
@@ -37,6 +38,7 @@ Kết quả trên tập test (dữ liệu MIMIC, bệnh nhân ICU): ở T = 88%,
 | `test/golden_persistence.h` | chuỗi đầu ra model kèm thời điểm cảnh báo mong đợi (persistence, cooldown) | không |
 | `test/test_host.c` | kiểm thử trên PC | |
 | `examples/esp32c3/` | project ESP-IDF mẫu: TFLite Micro, tự kiểm tra lúc boot, vòng lặp mỗi phút | có, đây là điểm bắt đầu |
+| `docs/HUONG_DAN_CAI_DAT.md` | hướng dẫn cài đặt trên MAX30102 + ESP32-C3 SuperMini | |
 | `docs/SPEC.md` | đặc tả: dữ liệu vào, công thức, ngưỡng, logic cảnh báo, config | |
 
 File sinh tự động được tạo bởi `model/export_firmware.py` từ `model/models_v3/`. Khi có model mới thì chạy lại script này, **không sửa tay**.
