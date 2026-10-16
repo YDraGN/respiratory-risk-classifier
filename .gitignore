@@ -217,8 +217,12 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Project-specific: data & model artifacts
-data/checkpoints/*.parquet
-data/**/*.parquet          
-data/screening_log.txt     
-model/checkpoints/
+# Project-specific: dữ liệu và sản phẩm train (tái tạo được bằng notebook, không commit)
+# data/data: raw_numerics, clean_1min, windows_*, dataset_*, features_*
+data/data/
+# screening_checkpoint.parquet: đầu vào của 01_download
+data/*.parquet
+data/screening_log.txt
+# checkpoint, điểm số, thống kê chuẩn hóa của từng lần train
+model/runs/
+archive/*/runs/

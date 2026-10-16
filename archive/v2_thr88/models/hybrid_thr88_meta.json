@@ -1,0 +1,50 @@
+{
+ "deploy_seed": 2,
+ "input_order": [
+  "serving_default_tab:0",
+  "serving_default_seq:0"
+ ],
+ "tiers": {
+  "watch": {
+   "fa": 0.5,
+   "k": 1,
+   "n": 1,
+   "cooldown": 30
+  },
+  "alert": {
+   "fa": 0.2,
+   "k": 1,
+   "n": 1,
+   "cooldown": 60
+  }
+ },
+ "thresholds_prob": {
+  "watch": 0.07537562400102615,
+  "alert": 0.13567456603050232
+ },
+ "thresholds_logit": {
+  "watch": -2.5069036414048433,
+  "alert": -1.8516902362240613
+ },
+ "tflite_kb": 19.4,
+ "input_seq": {
+  "shape": [
+   60,
+   6
+  ],
+  "scale": 0.045013122260570526,
+  "zero_point": -7
+ },
+ "input_tab": {
+  "shape": [
+   20
+  ],
+  "scale": 0.03921568766236305,
+  "zero_point": -1
+ },
+ "output": {
+  "scale": 0.028487542644143105,
+  "zero_point": 127,
+  "kind": "logit"
+ }
+}
